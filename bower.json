@@ -1,0 +1,18 @@
+{
+  "name": "area-selector",
+  "main": "area-selector.html",
+  "version": "0.0.1",
+  "description": "Area selector box",
+  "keywords": ["selector"],
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/hadron-app/area-selector/",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.6.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "iron-test-helpers": "https://github.com/hadronapp/iron-test-helpers.git",
+    "web-component-tester": "*"
+  }
+}

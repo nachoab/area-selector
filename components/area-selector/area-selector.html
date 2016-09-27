@@ -1,0 +1,255 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="area-selector">
+  <template>
+    <style>
+    :host {
+      contain: size layout style;
+      z-index: 1;
+    }
+
+    #area {
+      opacity: 0.25;
+    }
+
+    .border {
+      background: #333;
+      height: 1px;
+      width: 1px;
+      position: absolute;
+      z-index: 0;
+      will-change: transform;
+      transform-origin: top left;
+    }
+
+    #bg {
+      background: rgb(225, 225, 225);
+      width: 1px;
+      height: 1px;
+      position: absolute;
+      z-index: 1;
+      will-change: transform;
+      transform-origin: top left;
+    }
+
+    </style>
+
+    <div id="area">
+      <div id="border" class="border"></div>
+      <div id="bg"></div>
+    </div>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+
+  /**
+   * Selection started
+   * @event did-start-area-selection
+   */
+
+  /**
+   * Selection started
+   * @param {Object} rect
+   * @event did-track-area-selection
+   */
+
+  /**
+   * Selection started
+   * @event did-end-area-selection
+   */
+
+  Polymer({
+
+    is: 'area-selector',
+
+    hostAttributes: {
+      hidden: false
+    },
+
+    properties: {
+
+      /**
+       * Element target for drag selector
+       * @type {HTMLElement}
+       */
+      target: {
+        type: Object,
+        observer: '_targetChanged'
+      },
+
+      /**
+       * Area is being drawn
+       * @type {Boolean}
+       */
+      dragging: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * Area Rect
+       * @type {Object}
+       * @property {Number} top
+       * @property {Number} righ
+       * @property {Number} bottom
+       * @property {Number} left
+       * @property {Number} width
+       * @property {Number} height
+       */
+      area: {
+        type: Object,
+        notify: true,
+        readOnly: true
+      },
+
+      _trackRaf: Number,
+      _startX: Number,
+      _startY: Number,
+
+    },
+
+    detached() {
+      this.disable();
+    },
+
+    enable() {
+      if (this.target) {
+        this.listen(this.target, 'track', '_track');
+      }
+    },
+
+    disable() {
+      this.unlisten(this.target, 'track', '_track');
+    },
+
+    _targetChanged(target, old) {
+      this.enable();
+      if (old) {
+        this.unlisten(old, 'track', '_track');
+      }
+    },
+
+    _track(event) {
+      const state = event.detail.state;
+
+      switch(state) {
+        case 'start':
+          this._start(event.detail);
+          break;
+        case 'track':
+          this.debounce('track', () => {
+            this._move(event.detail);
+          });
+          break;
+        case 'end':
+          this._end();
+          break;
+      }
+    },
+
+    _start(event) {
+      const x = event.x;
+      const y = event.y;
+      this._startX = x;
+      this._startY = y;
+      this.$.bg.style.left = `${x}px`;
+      this.$.bg.style.top = `${y}px`;
+      this.$.border.style.left = `${x}px`;
+      this.$.border.style.top = `${y}px`;
+      this.transform(`scale(1, 1)`, this.$.bg);
+      this.transform(`scale(1, 1)`, this.$.border);
+      this._setDragging(true);
+      this.fire('did-start-area-selection');
+    },
+
+    _move(event) {
+      const x = Math.round(event.x);
+      const y = Math.round(event.y);
+      let dx = Math.round(x - this._startX);
+      let dy = Math.round(y - this._startY);
+      const top = Math.min(this._startY, y);
+      const left = Math.min(this._startX, x);
+      const width = Math.abs(dx);
+      const height = Math.abs(dy);
+      const right = left + width;
+      const bottom = top + height;
+      const rect = {left, right, top, bottom, width, height};
+      let borderX, borderY, borderWidth = dx, borderHeight = dy;
+
+      // This compensates for the borders widths, so we fit perfectly in the
+      // 1px boxes of the pixel perfection package
+      dx--;
+      dy--;
+
+      // Move the background borders behind to the proper position and
+      // size
+      if (dx < 0) {
+        borderWidth -= 3;
+        borderX = 1;
+      } else {
+        borderWidth += 1;
+        borderX = -1;
+      }
+
+      if (dy < 0) {
+        borderHeight -= 3;
+        borderY = 1;
+      } else {
+        borderHeight += 1;
+        borderY = -1;
+      }
+
+      cancelAnimationFrame(this._trackRaf);
+
+      this._trackRaf = requestAnimationFrame(() => {
+        this.transform(`scale(${dx}, ${dy})`, this.$.bg);
+        this.transform(`translate3d(${borderX}px, ${borderY}px, 0) scale(${borderWidth}, ${borderHeight})`,
+          this.$.border);
+
+        // Snap - show after a certain amount of dragging
+        if (this.hidden && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          this.hidden = false;
+        }
+      }, this);
+      this._setArea(rect);
+      this.fire('did-track-area-selection', {rect: rect});
+    },
+
+    _end() {
+      if (!this.dragging) {return;}
+
+      cancelAnimationFrame(this._trackRaf);
+
+      requestAnimationFrame(() => {
+        // Dissapear but stay in the DOM
+        const animation = this.$.bg.animate([
+          {opacity: '1'},
+          {opacity: '0'},
+        ], 64);
+
+        this.$.border.style.opacity = 0;
+        animation.onfinish = () => {
+          this.transform('scale(0, 0)', this.$.bg);
+          this.transform('translate3d(0, 0, 0) scale(0, 0)', this.$.border);
+          this.$.bg.style.opacity = 1;
+          this.$.border.style.opacity = 1;
+          this.hidden = true;
+          this._setDragging(false);
+        };
+
+        this._setArea(undefined);
+        this.fire('did-end-area-selection');
+      });
+    }
+
+  });
+
+}());
+</script>

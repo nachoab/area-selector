@@ -1,0 +1,29 @@
+{
+  "name": "area-selector",
+  "main": "area-selector.html",
+  "description": "Area selector box",
+  "keywords": [
+    "selector"
+  ],
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/hadron-app/area-selector/",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.6.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "iron-test-helpers": "https://github.com/hadronapp/iron-test-helpers.git",
+    "web-component-tester": "*"
+  },
+  "_release": "51b6c22446",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "51b6c22446c983248af39d85c7f1e7cdf3c24890"
+  },
+  "_source": "git://github.com/nachoab/area-selector.git",
+  "_target": "master",
+  "_originalSource": "nachoab/area-selector",
+  "_direct": true
+}
