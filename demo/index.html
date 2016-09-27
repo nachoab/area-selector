@@ -36,9 +36,9 @@
 
       #info {
         will-change: transform;
-        color: ##80deea;
         position: absolute;
         top: 10px;
+        padding: 1em 10vh;
       }
 
       #info span {
@@ -49,22 +49,34 @@
   </head>
   <body unresolved>
 
-    <div style="color: #ccc; margin-top: -10vh">area-selector demo</div>
-    <div style="color: #00bcd4; font-size: 48px; margin-bottom: 10px;">Mousedown and drag anywhere</div>
+    <div style="padding: 10vh;">
+      <div style="color: #ccc; margin: -10vh auto 0 auto;">area-selector demo</div>
+      <div style="color: #00bcd4; font-size: 48px; margin-bottom: 10px;">Mousedown and drag anywhere</div>
+    </div>
 
     <template is="dom-bind">
       <area-selector area="{{area}}"></area-selector>
 
       <template is="dom-if" if="{{area}}">
         <div id="info">
-          <div>
-            top: <span>{{area.top}}</span>
-            right: <span>{{area.right}}</span>
-            bottom: <span>{{area.bottom}}</span>
-            left: <span>{{area.left}}</span>
-            width: <span>{{area.width}}</span>
-            height: <span>{{area.height}}</span>
-          </div>
+            <div>
+              top: <span>{{area.top}}</span>
+            </div>
+            <div>
+              right: <span>{{area.right}}</span>
+            </div>
+            <div>
+              bottom: <span>{{area.bottom}}</span>
+            </div>
+            <div>
+              left: <span>{{area.left}}</span>
+            </div>
+            <div>
+              width: <span>{{area.width}}</span>
+            </div>
+            <div>
+              height: <span>{{area.height}}</span>
+            </div>
         </div>
       </template>
 

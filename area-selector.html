@@ -170,10 +170,10 @@
     },
 
     _move(event) {
-      const x = event.x;
-      const y = event.y;
-      let dx = x - this._startX;
-      let dy = y - this._startY;
+      const x = Math.round(event.x);
+      const y = Math.round(event.y);
+      let dx = Math.round(x - this._startX);
+      let dy = Math.round(y - this._startY);
       const top = Math.min(this._startY, y);
       const left = Math.min(this._startX, x);
       const width = Math.abs(dx);
