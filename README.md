@@ -1,7 +1,15 @@
 # area-selector custom element
 
-Draws an area of selection for multiple selection.
+# Demo
 
+https://nachoab.github.io/area-selector/components/area-selector/demo
+
+# Doc
+
+https://nachoab.github.io/area-selector/components/area-selector/
+
+
+Draws an area of selection for multiple selection.
 
 ```
 http://localhost:8080/components/area-selector/demo/
