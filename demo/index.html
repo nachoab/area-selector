@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>area-selector demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script>
+    window.Polymer = window.Polymer || {};
+    window.Polymer.dom = 'shadow';
+    </script>
+    <link rel="import" href="../area-selector.html">
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        font-family: sans-serif;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+        cursor: default;
+      }
+
+      body {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      #info {
+        will-change: transform;
+        color: ##80deea;
+        position: absolute;
+        top: 10px;
+      }
+
+      #info span {
+        color: #00bcd4;
+      }
+    </style>
+
+  </head>
+  <body unresolved>
+
+    <div style="color: #ccc; margin-top: -10vh">area-selector demo</div>
+    <div style="color: #00bcd4; font-size: 48px; margin-bottom: 10px;">Mousedown and drag anywhere</div>
+
+    <template is="dom-bind">
+      <area-selector area="{{area}}"></area-selector>
+
+      <template is="dom-if" if="{{area}}">
+        <div id="info">
+          <div>
+            top: <span>{{area.top}}</span>
+            right: <span>{{area.right}}</span>
+            bottom: <span>{{area.bottom}}</span>
+            left: <span>{{area.left}}</span>
+            width: <span>{{area.width}}</span>
+            height: <span>{{area.height}}</span>
+          </div>
+        </div>
+      </template>
+
+      <script>
+        const selector = document.querySelector('area-selector');
+        selector.target = document.body;
+      </script>
+    </template>
+
+    <script>
+    </script>
+  </body>
+</html>
