@@ -46,6 +46,23 @@
 (function() {
   'use strict';
 
+
+  /**
+   * Selection started
+   * @event did-start-area-selection
+   */
+
+  /**
+   * Selection started
+   * @param {Object} rect
+   * @event did-track-area-selection
+   */
+
+  /**
+   * Selection started
+   * @event did-end-area-selection
+   */
+
   Polymer({
 
     is: 'area-selector',
@@ -65,6 +82,10 @@
         observer: '_targetChanged'
       },
 
+      /**
+       * Area is being drawn
+       * @type {Boolean}
+       */
       dragging: {
         type: Boolean,
         value: false,
@@ -72,6 +93,16 @@
         readOnly: true
       },
 
+      /**
+       * Area Rect
+       * @type {Object}
+       * @property {Number} top
+       * @property {Number} righ
+       * @property {Number} bottom
+       * @property {Number} left
+       * @property {Number} width
+       * @property {Number} height
+       */
       area: {
         type: Object,
         notify: true,
